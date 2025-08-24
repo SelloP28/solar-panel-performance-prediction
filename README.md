@@ -11,7 +11,7 @@ This repository contains a Streamlit web application designed to predict the Max
     - Developed a machine learning model to predict MPPT voltage and power using historical solar dataset.  
     - Utilized `StandardScaler` for data preprocessing to enhance model accuracy.  
     - Created 3D visualizations with Matplotlib to illustrate power variations with voltage and temperature, providing insights for renewable energy software optimization.  
-  - **Live Demo**: [Streamlit App](#deployment)  
+  - **Live Demo**: [Streamlit App](https://solar-panel-performance-prediction-sphakoe.streamlit.app/)  
   - **Dataset**: Kaggle Solar Power Generation Data (Plant 1).  
 
 - **Solar Energy Output Forecaster**  
