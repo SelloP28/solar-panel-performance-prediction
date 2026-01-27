@@ -1,0 +1,30 @@
+# Python / ML junk
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+.python-version
+*.egg-info/
+.pytest_cache/
+.coverage
+
+# Large binaries & generated files (do NOT commit these)
+*.pt
+*.h5
+*.joblib
+*.pkl
+*.pickle
+data/*.csv                  # ← your Plant_1 CSVs — don't commit large datasets
+*.png                       # training plots
+*.jpg
+*.jpeg
+
+# IDE / Editor
+.vscode/
+.idea/
+*.sublime-*
+
+# Windows junk
+Thumbs.db
+desktop.ini
