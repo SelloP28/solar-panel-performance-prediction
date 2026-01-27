@@ -51,26 +51,37 @@ temperature = st.slider("Temperature (°C)", min_value=0.0, max_value=60.0, valu
 
 # Prediction function
 def predict(irradiance, temperature):
+    st.write(f"Debug: Input - Irradiance={irradiance}, Temp={temperature}")  # Visible on app
+
     X_new = np.array([[irradiance, temperature]])
-    X_scaled = torch.tensor(X_scaler.transform(X_new), dtype=torch.float32)
+    X_scaled = X_scaler.transform(X_new)  # Use numpy here for debug
+    st.write(f"Debug: Scaled input: {X_scaled.flatten().tolist()}")
+
+    X_scaled_t = torch.tensor(X_scaled, dtype=torch.float32)
     with torch.no_grad():
-        y_pred_scaled = model(X_scaled)
+        y_pred_scaled = model(X_scaled_t)
+    st.write(f"Debug: Raw scaled prediction: {y_pred_scaled.numpy().flatten().tolist()}")
+
     y_pred = y_scaler.inverse_transform(y_pred_scaled.numpy())
-    v_mp, p_mp = y_pred[0][0], y_pred[0][1]
-    # Enforce physics: clip negatives + low-irradiance handling
-    if irradiance < 10:  # very low light
+    v_mp_raw, p_mp_raw = y_pred[0][0], y_pred[0][1]
+
+    st.write(f"Debug: Inverse scaled: V_mp_raw={v_mp_raw:.2f}, P_mp_raw={p_mp_raw:.2f}")
+
+    # Softer clipping + low-light handling
+    if irradiance < 50:  # Lower threshold - realistic dawn/dusk
         v_mp = 0.0
         p_mp = 0.0
     else:
-        v_mp = max(v_mp, 0.0)  # or max(v_mp, 15.0) for more realism
-        p_mp = max(p_mp, 0.0)
+        v_mp = max(v_mp_raw, 5.0)   # Minimum realistic V_mp ~5-10V even low light
+        p_mp = max(p_mp_raw, 0.0)
+
     return v_mp, p_mp
 
 # Button to trigger prediction and plot
 if st.button("Predict MPPT Values and Update Plot"):
     v_mp, p_mp = predict(irradiance, temperature)
-    st.success(f"Predicted MPPT Voltage (V_mp): {v_mp:.2f} V")
-    st.success(f"Predicted MPPT Power (P_mp): {p_mp:.2f} W")
+    st.success(f"Predicted MPPT Voltage (V_mp): **{v_mp:.2f} V**")
+    st.success(f"Predicted MPPT Power (P_mp): **{p_mp:.2f} W**")
 
     # 3D visualization section
     st.subheader("Power Variation Visualization")
