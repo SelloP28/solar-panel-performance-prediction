@@ -56,7 +56,15 @@ def predict(irradiance, temperature):
     with torch.no_grad():
         y_pred_scaled = model(X_scaled)
     y_pred = y_scaler.inverse_transform(y_pred_scaled.numpy())
-    return y_pred[0][0], y_pred[0][1]  # V_mp, P_mp
+    v_mp, p_mp = y_pred[0][0], y_pred[0][1]
+    # Enforce physics: clip negatives + low-irradiance handling
+    if irradiance < 10:  # very low light
+        v_mp = 0.0
+        p_mp = 0.0
+    else:
+        v_mp = max(v_mp, 0.0)  # or max(v_mp, 15.0) for more realism
+        p_mp = max(p_mp, 0.0)
+    return v_mp, p_mp
 
 # Button to trigger prediction and plot
 if st.button("Predict MPPT Values and Update Plot"):
