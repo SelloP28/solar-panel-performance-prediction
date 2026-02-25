@@ -1,4 +1,3 @@
-# app.py (Updated for PyTorch and Interactive Plot)
 import streamlit as st
 import numpy as np
 import torch
