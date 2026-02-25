@@ -1,5 +1,4 @@
 # mppt_kaggle_plant1.py (Updated for PyTorch)
-# -*- coding: utf-8 -*-
 """
 Solar Panel MPPT Prediction using ANN (Kaggle Plant 1 Data)
 Inputs: Irradiance, Temperature; Outputs: V_mp, P_mp
